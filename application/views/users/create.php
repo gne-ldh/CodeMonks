@@ -92,8 +92,6 @@ echo form_open('users/create', $attributes); ?>
     <div class="span8">
 	  <!--  <input type="hidden" name="manager[]" id="manager" />
        -->
-	 <select name="managerS[]"  size="1" multiple="multiple"  id="managerS" required readonly>
-         </select>
 
         <div class="control-group">
             <label class="control-label" for="txtManager">
@@ -104,8 +102,13 @@ echo form_open('users/create', $attributes); ?>
             </label>
             <div class="controls">
                 <div class="input-append">
-                    <input type="text" id="txtManager" name="txtManager" required readonly />
-                    <a id="cmdSelfManager" class="btn btn-primary"><?php echo lang('users_create_button_self');?></a>
+            <!--        <input type="text" id="txtManager" name="txtManager" required readonly />
+		-->
+		<select name="managerS[]"  size="1" multiple="multiple"  id="managerS" required readonly>
+         </select>
+
+
+		    <a id="cmdSelfManager" class="btn btn-primary"><?php echo lang('users_create_button_self');?></a>
                     <a id="cmdSelectManager" class="btn btn-primary"><?php echo lang('users_create_button_select');?></a>
                 </div>
             </div>
@@ -352,7 +355,7 @@ echo form_open('users/create', $attributes); ?>
 
     //Popup select postion: on click OK, find the user id for the selected line
     function select_manager() {
-	    if ( employees.rows({ selected: true }).any() ) { alert("got");	
+//	    if ( employees.rows({ selected: true }).any() ) { alert("got");	
 	    //shiv
 	    var manager=new Array();
 	    var val =employees.rows().data().toArray();
@@ -363,10 +366,10 @@ echo form_open('users/create', $attributes); ?>
 	     //console.log(manager);
 	     //shiv
 	     //            var manager = employees.rows({selected: true}).data()[0][0];
-	                 var text = employees.rows({selected: true}).data()[0]['firstname'] + ' ' + employees.rows({selected: true}).data()[0][2];
+//	                 var text = employees.rows({selected: true}).data()[0]['firstname'] + ' ' + employees.rows({selected: true}).data()[0][2];
 	                   //          $('#manager').val(manager[]);
 
-	    $('#txtManager').val(text);
+//	    $('#txtManager').val(text);
 	    var options=$('#managerS option');
 	    //    options.select().all();
 	         var manval=$.map(options,function(option){
@@ -375,7 +378,7 @@ echo form_open('users/create', $attributes); ?>
 	         		 var sel =$("#managerS option:selected").val();
 	         		  alert(sel);
 	         		  	alert(manval +"shiv");
-        }
+  //      }
         $("#frmSelectManager").modal('hide');
     }
 
