@@ -89,8 +89,25 @@ class Users extends CI_Controller {
 	       
 	$data['employees'] = $this->users_model->getAllEmployees();
 	$data['title'] = lang('employees_index_title');
-	// $this->load->view('users/employees', $data);
-	 $this->load->view('multi_level/selectlevel');
+	$this->load->view('users/employees', $data);
+//	 $this->load->view('multi_level/selectlevel');
+    }
+
+ /**
+     * Display the modal pop-up content of the list of employees to select multiple level manager
+     *
+     */
+    public function MultiLevelManager() {
+        $this->auth->checkIfOperationIsAllowed('employees_list');
+        $data = getUserContext($this);
+        $this->lang->load('datatable', $this->language);
+        $this->lang->load('organization', $this->language);
+        $this->lang->load('treeview', $this->language);
+       
+	$data['employees'] = $this->users_model->getAllEmployees();
+        $data['title'] = lang('employees_index_title');
+//	$this->load->view('multi_level/level', $data);
+        $this->load->view('multi_level/seletlevel');
     }
 
     /**
