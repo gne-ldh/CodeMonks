@@ -54,6 +54,7 @@ $route['admin'] = 'admin/settings';
 $route['users/myprofile'] = 'users/myProfile';
 $route['users/employees'] = 'users/employees';
 $route['users/employeesMultiSelect'] = 'users/employeesMultiSelect';
+$route['users/MultiLevelManager'] = 'users/MultiLevelManager';
 $route['users/export'] = 'users/export';
 $route['users/reset/(:num)'] = 'users/reset/$1';
 $route['users/create'] = 'users/create';

@@ -2,9 +2,9 @@
 /**
  * Email template.You can change the content of this template
  * @copyright  Copyright (c) 2014-2019 Benjamin BALET
- * @license    http://opensource.org/licenses/AGPL-3.0 AGPL-3.0
- * @link       https://github.com/bbalet/jorani
- * @since      0.6.1
+ * @license      http://opensource.org/licenses/AGPL-3.0 AGPL-3.0
+ * @link            https://github.com/bbalet/jorani
+ * @since         0.1.0
  */
 ?>
 <html lang="en">
@@ -20,9 +20,7 @@
     </head>
     <body>
         <h3>{Title}</h3>
-        Dear {Firstname} {Lastname}, <br />
-        <br />
-        <p>Your cancellation request was accepted and the leave request has been cancelled by {managerName}.</p>
+        {Firstname} {Lastname} requested time off. See the <a href="{BaseUrl}leaves/requests/{LeaveId}">details</a> below:<br />
         <table border="0">
             <tr>
                 <td>From &nbsp;</td><td>{StartDate}&nbsp;({StartDateType})</td>
@@ -34,13 +32,26 @@
                 <td>Type &nbsp;</td><td>{Type}</td>
             </tr>
             <tr>
-                <td>Reason &nbsp;</td><td>{Cause}</td>
+                <td>Duration &nbsp;</td><td>{Duration}</td>
             </tr>
             <tr>
-                <td>Last comment &nbsp;</td><td>{Comments}</td>
+                <td>Balance &nbsp;</td><td>{Balance}</td>
+            </tr>
+            <tr>
+                <td>Reason &nbsp;</td><td>{Reason}</td>
+            </tr>
+            <tr>
+              <td>Last Comment &nbsp;</td><td>{Comments}</td>
+            </tr>
+            <tr>
+                <td><a href="{BaseUrl}requests/recommend/{LeaveId}">Recommend</a> &nbsp;</td>
+                <td><a href="{BaseUrl}requests?rejected={LeaveId}">Reject</a></td>
             </tr>
         </table>
+        <br />
+        You can check the <a href="{BaseUrl}hr/counters/collaborators/{UserId}">leave balance</a> before validating the leave request.
         <hr>
         <h5>*** This is an automatically generated message, please do not reply to this message ***</h5>
     </body>
 </html>
+

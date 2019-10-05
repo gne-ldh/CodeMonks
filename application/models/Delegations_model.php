@@ -54,6 +54,23 @@ class Delegations_model extends CI_Model {
             return FALSE;
         }
     }
+    /**
+     * Return TRUE if an employee is the delegate of a manager, FALSE otherwise
+     * @param int $employee id of the employee to be checked
+     * @param int $manager id of a manager
+     * @return bool is delegate
+     * @author Benjamin BALET <benjamin.balet@gmail.com>
+     */
+    public function checkDelegation($employee, $allManagerId) {
+	    foreach($allmanagerId as $managerId){
+		    if(isDelegateOfManager($employee,$managerId)){
+			    return array("bool"=>TRUE,"managerId"=>$managerId);
+		     break;
+		    }
+	    }
+	    return FALSE;
+    }
+
 
     /**
      * Return TRUE if an employee has any delegation, FALSE otherwise

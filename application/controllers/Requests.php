@@ -76,15 +76,15 @@ class Requests extends CI_Controller {
             redirect('notfound');
         }
         $employee = $this->users_model->getUsers($leave['employee']);
-	$is_delegate = $this->delegations_model->isDelegateOfManager($this->user_id, $employee['manager']);
+	
 	//only top manager of employee can accept leave request 
 	$topLevelManager=$this->leaves_model->getToplevelmanager($employee['id']);
-	    //   $data['data']=$topLevelManager[0]['mi'];
-	    //   $this->load->view('test',$data);
+	$is_delegate = $this->delegations_model->isDelegateOfManager($this->user_id,$topLevelManager[0]['mi']);
 	if (($this->user_id ==$topLevelManager[0]['mi']) || ($this->is_hr)  || ($is_delegate)) {
             $this->leaves_model->switchStatus($id, LMS_ACCEPTED);
-            $this->sendMail($id, LMS_REQUESTED_ACCEPTED);
-            $this->session->set_flashdata('msg', lang('requests_accept_flash_msg_success'));
+	    $userName=$this->users_model->getName($this->user_id);
+	      $this->sendMail($id, LMS_REQUESTED_ACCEPTED,$userName);
+	    $this->session->set_flashdata('msg', lang('requests_accept_flash_msg_success'));
             if (isset($_GET['source'])) {
                 redirect($_GET['source']);
             } else {
@@ -109,16 +109,21 @@ class Requests extends CI_Controller {
             redirect('notfound');
         }
         $employee = $this->users_model->getUsers($leave['employee']);
-    $is_delegate = $this->delegations_model->isDelegateOfManager($this->user_id, $employee['manager']);
-	//only top manager of employee can accept leave request 
- 	$topLevelManager=$this->leaves_model->getToplevelmanager($employee['id']);
-     //   $data['data']=$topLevelManager[0]['mi'];
+	$currentLevelManagerId=$this->leaves_model->getCurrentLevelManagerId($employee['id'],$id);
+	$is_delegate = $this->delegations_model->isDelegateOfManager($this->user_id,$currentLevelManagerId);
+	//   $data['data']=$topLevelManager[0]['mi'];
        //   $this->load->view('test',$data);
-        if (($this->user_id ==$topLevelManager[0]['mi']) || ($this->is_hr)  || ($is_delegate)) {
-         $nextlevel= $this->leaves_model->changeLevel($id); 
-	  //  $this->leaves_model->switchStatus($id, LMS_ACCEPTED);
-       //     $this->sendMail($id, LMS_REQUESTED_ACCEPTED);
-            $this->session->set_flashdata('msg', lang('requests_accept_flash_msg_success'));
+	    if (($this->user_id ==$currentLevelManagerId) || ($this->is_hr)  || ($is_delegate)) {
+	$nextlevel= $this->leaves_model->changeLevel($id); 
+	$this->leaves_model->switchStatus($id, LMS_RECOMMENDED);       
+	$userName=$this->users_model->getName($this->user_id);
+
+	
+	  $this->sendMail($id, LMS_REQUESTED_ACCEPTEDi,$userName);
+		 
+	 $this->sendMailOnLeaveRecommendation($id); // send mail to next (upper)level manager
+		 
+	$this->session->set_flashdata('msg',/* lang('requests_accept_flash_msg_success')*/"The leave request has been successfully recommended."); //need to genrate lang
             if (isset($_GET['source'])) {
                 redirect($_GET['source']);
             } else {
@@ -145,14 +150,19 @@ class Requests extends CI_Controller {
             redirect('notfound');
         }
         $employee = $this->users_model->getUsers($leave['employee']);
-        $is_delegate = $this->delegations_model->isDelegateOfManager($this->user_id, $employee['manager']);
-        if (($this->user_id == $employee['manager']) || ($this->is_hr)  || ($is_delegate)) {
-            if(isset($_POST['comment'])){
+	//edited by shiv
+	$currentLevelManager=$this->leaves_model->getCurrentLevelManagerId($employee['id'],$id);  
+
+	$is_delegate = $this->delegations_model->isDelegateOfManager($this->user_id, $currentLevelManager);
+	if (($this->user_id == $currentLevelManager) || ($this->is_hr)  || ($is_delegate)) {
+	if(isset($_POST['comment'])){
               $this->leaves_model->switchStatusAndComment($id, LMS_REJECTED, $_POST['comment']);
             } else {
               $this->leaves_model->switchStatus($id, LMS_REJECTED);
             }
-            $this->sendMail($id, LMS_REQUESTED_REJECTED);
+	$userName=$this->users_model->getName($this->user_id);
+	$this->sendMail($id, LMS_REQUESTED_REJECTED,$userName);
+
             $this->session->set_flashdata('msg',  lang('requests_reject_flash_msg_success'));
             if (isset($_GET['source'])) {
                 redirect($_GET['source']);
@@ -179,12 +189,17 @@ class Requests extends CI_Controller {
         if (empty($leave)) {
             redirect('notfound');
         }
-        $employee = $this->users_model->getUsers($leave['employee']);
-        $is_delegate = $this->delegations_model->isDelegateOfManager($this->user_id, $employee['manager']);
-        if (($this->user_id == $employee['manager']) || ($this->is_hr)  || ($is_delegate)) {
-            $this->leaves_model->switchStatus($id, LMS_CANCELED);
-            $this->sendMail($id, LMS_CANCELLATION_CANCELED);
-            $this->session->set_flashdata('msg', lang('requests_cancellation_accept_flash_msg_success'));
+
+	$employee = $this->users_model->getUsers($leave['employee']);
+		  $allManager2d =$this->users_model->getManagers($id);
+	          $allManager = array_column($allManager2d, 'manager_id');//convert 2d array to 1d.
+		   //     $currentLevelManager=$this->leaves_model->getCurrentLevelManagerId($employee['id'],$id);  
+	$is_delegate = $this->delegations_model->checkDelegation($this->user_id, $allManager);
+		  	  file_put_contents("php://stderr",print_r($is_delegate."dsd",true));	          if (!(in_array($this->user_id,$allManager)) || ($this->is_hr)  || ($is_delegate['bool'])) {
+			  $this->leaves_model->switchStatus($id, LMS_CANCELED);			
+			  $userName=$this->users_model->getName($this->user_id);	      
+		    	  $this->sendMail($id, LMS_CANCELLATION_CANCELED,$userName);
+	$this->session->set_flashdata('msg', lang('requests_cancellation_accept_flash_msg_success'));
             if (isset($_GET['source'])) {
                 redirect($_GET['source']);
             } else {
@@ -210,16 +225,20 @@ class Requests extends CI_Controller {
         if (empty($leave)) {
             redirect('notfound');
         }
-        $employee = $this->users_model->getUsers($leave['employee']);
-        $is_delegate = $this->delegations_model->isDelegateOfManager($this->user_id, $employee['manager']);
-        if (($this->user_id == $employee['manager']) || ($this->is_hr)  || ($is_delegate)) {
-            //$this->leaves_model->switchStatus($id, LMS_ACCEPTED);
+
+		$employee = $this->users_model->getUsers($leave['employee']);
+	       $currentLevelManager=$this->leaves_model->getCurrentLevelManagerId($employee['id'],$id);
+	 
+		$is_delegate = $this->delegations_model->isDelegateOfManager($this->user_id, $currentLevelManager);
+	        if (($this->user_id == $currentLevelManager) || ($this->is_hr)  || ($is_delegate)) {
+		//$this->leaves_model->switchStatus($id, LMS_ACCEPTED);
             if(isset($_POST['comment'])){
               $this->leaves_model->switchStatusAndComment($id, LMS_ACCEPTED, $_POST['comment']);
             } else {
               $this->leaves_model->switchStatus($id, LMS_ACCEPTED);
-            }
-            $this->sendMail($id, LMS_CANCELLATION_REQUESTED);
+	    }
+	     $userName=$this->users_model->getName($this->user_id);
+            $this->sendMail($id, LMS_CANCELLATION_REQUESTED,$userName);
             $this->session->set_flashdata('msg', lang('requests_cancellation_reject_flash_msg_success'));
             if (isset($_GET['source'])) {
                 redirect($_GET['source']);
@@ -336,15 +355,18 @@ class Requests extends CI_Controller {
         $this->lang->load('hr', $this->language);
         $this->load->model('users_model');
         $employee = $this->users_model->getUsers($id);
-        if (($this->user_id != $employee['manager']) && ($this->is_hr === FALSE)) {
-            log_message('error', 'User #' . $this->user_id . ' illegally tried to access to collaborators/leave/create  #' . $id);
+	$allManager2d =$this->users_model->getManagers($id);
+		$allManager = array_column($allManager2d, 'manager_id');//convert 2d array to 1d.
+	        if (!(in_array($this->user_id,$allManager)) && ($this->is_hr === FALSE)) {
+	log_message('error', 'User #' . $this->user_id . ' illegally tried to access to collaborators/leave/create  #' . $id);
             $this->session->set_flashdata('msg', lang('requests_summary_flash_msg_forbidden'));
             redirect('leaves');
         } else {
             $data = getUserContext($this);
             $this->load->helper('form');
             $this->load->library('form_validation');
-            $data['title'] = lang('hr_leaves_create_title');
+	    $data['title'] = lang('hr_leaves_create_title');
+	      $data['help'] = $this->help->create_help_link('global_link_doc_page_leave_on_behalf_of_collaborators');
             $data['form_action'] = 'requests/createleave/' . $id;
             $data['source'] = 'requests/collaborators';
             $data['employee'] = $id;
@@ -374,7 +396,7 @@ class Requests extends CI_Controller {
                 $this->load->view('hr/createleave');
                 $this->load->view('templates/footer');
             } else {
-                $this->leaves_model->setLeaves($id);       //We don't use the return value
+                $this->leaves_model->setLeaves($id,$this->user_id);       //We don't use the return value
                 $this->session->set_flashdata('msg', lang('hr_leaves_create_flash_msg_success'));
                 //No mail is sent, because the manager would set the leave status to accepted
                 redirect('requests/collaborators');
@@ -388,7 +410,7 @@ class Requests extends CI_Controller {
      * @param int $transition Transition in the workflow of leave request
      * @author Benjamin BALET <benjamin.balet@gmail.com>
      */
-    private function sendMail($id, $transition)
+    private function sendMail($id, $transition,$userName)
     {
         $this->load->model('users_model');
         $this->load->model('organization_model');
@@ -450,7 +472,8 @@ class Requests extends CI_Controller {
             'EndDateType' => $lang_mail->line($leave['enddatetype']),
             'Cause' => $leave['cause'],
             'Type' => $leave['type_name'],
-            'Comments' => $comment
+	    'Comments' => $comment,
+	    'managerName'=>$userName
         );
         $this->load->library('parser');
         switch ($transition) {
@@ -470,7 +493,109 @@ class Requests extends CI_Controller {
         }
         sendMailByWrapper($this, $subject, $message, $employee['email'], is_null($supervisor)?NULL:$supervisor->email);
     }
+	 //added by shiv
+    /**
+     * Send a leave Recommend email to the next manager 
+     * @param int $id Leave request identifier
+     */
+    private function sendMailOnLeaveRecommendation($id ) {
+        $this->load->model('users_model');
+        $this->load->model('types_model');
+        $this->load->model('delegations_model');
+        //We load everything from DB as the LR can be edited from HR/Employees
+        $leave = $this->leaves_model->getLeaves($id);
+        $user = $this->users_model->getUsers($leave['employee']);
+       // $manager = $this->users_model->getUsers($user['manager']);
+//shiv
+//      $managersid=$this->users_model->getmanager($leave['employee']);
+         $currentLevelManagerId=$this->leaves_model->getCurrentLevelManagerId($leave['employee'],$id);
+        $manager = $this->users_model->getUsers($currentLevelManagerId);//shiv
+        if (empty($manager['email'])) {
+            $this->session->set_flashdata('msg', lang('leaves_create_flash_msg_error'));
+        } else {
+            //Send an e-mail to the manager
+            $this->load->library('email');
+            $this->load->library('polyglot');
+            $usr_lang = $this->polyglot->code2language($manager['language']);
+            //We need to instance an different object as the languages of connected user may differ from the UI lang
+            $lang_mail = new CI_Lang();
+            $lang_mail->load('email', $usr_lang);
+            $lang_mail->load('global', $usr_lang);
+        //    if ($reminder) {
+          //      $this->sendGenericMail($leave, $user, $manager, $lang_mail,
+           //         $lang_mail->line('email_leave_request_reminder') . ' ' .
+            //        $lang_mail->line('email_leave_request_creation_title'),
+             //       $lang_mail->line('email_leave_request_reminder') . ' ' .
+              //      $lang_mail->line('email_leave_request_creation_subject'),
+                //    'request');
+         //   } else {
+                $this->sendGenericMail($leave, $user, $manager, $lang_mail,
+                    $lang_mail->line('email_leave_request_creation_title'),
+                    $lang_mail->line('email_leave_request_creation_subject'),
+                    'request');
+           // }
+        }
+    }
+ /**
+     * Send a generic email from the collaborator to the manager (delegate in copy) when a leave Recommended
+     * @param $leave Leave request
+     * @param $user Connected employee
+     * @param $manager Manger of connected employee
+     * @param $lang_mail Email language library
+     * @param $title Email Title
+     * @param $detailledSubject Email detailled Subject
+     * @param $emailModel template email to use
+     * @author Guillaume Blaquiere <guillaume.blaquiere@gmail.com>
+     *
+     */
+    private function sendGenericMail($leave, $user, $manager, $lang_mail, $title, $detailledSubject, $emailModel) {
+        $date = new DateTime($leave['startdate']);
+        $startdate = $date->format($lang_mail->line('global_date_format'));
+        $date = new DateTime($leave['enddate']);
+        $enddate = $date->format($lang_mail->line('global_date_format'));
+        $comments=$leave['comments'];
+        $comment = '';
+        if(!empty($comments)){
+          $comments=json_decode($comments);
+          foreach ($comments->comments as $comments_item) {
+            if($comments_item->type == "comment"){
+              $comment = $comments_item->value;
+            }
+          }
+        }
+        log_message('info', "comment : " . $comment);
+        $this->load->library('parser');
+        $data = array(
+            'Title' => $title,
+            'Firstname' => $user['firstname'],
+            'Lastname' => $user['lastname'],
+            'StartDate' => $startdate,
+            'EndDate' => $enddate,
+            'StartDateType' => $lang_mail->line($leave['startdatetype']),
+            'EndDateType' => $lang_mail->line($leave['enddatetype']),
+            'Type' => $this->types_model->getName($leave['type']),
+            'Duration' => $leave['duration'],
+            'Balance' => $this->leaves_model->getLeavesTypeBalanceForEmployee($leave['employee'] , $leave['type_name'], $leave['startdate']),
+            'Reason' => $leave['cause'],
+            'BaseUrl' => $this->config->base_url(),
+            'LeaveId' => $leave['id'],
+            'LeaveAtLevel'=>$leave['current_level_of_manager'],//edited by shiv
+            'UserId' => $this->user_id,
+            'Comments' => $comment
+        );
+$message = $this->parser->parse('emails/' . $manager['language'] . '/'.$emailModel, $data, TRUE);
+        $to = $manager['email'];
+        $subject = $detailledSubject . ' ' . $user['firstname'] . ' ' . $user['lastname'];
+        //Copy to the delegates, if any
+        $cc = NULL;
+        $delegates = $this->delegations_model->listMailsOfDelegates($manager['id']);
+        if ($delegates != '') {
+            $cc = $delegates;
+        }
+        sendMailByWrapper($this, $subject, $message, $to, $cc);
+    }
 
+	
     /**
      * Export the list of all leave requests (sent to the connected user) into an Excel file
      * @param string $filter Filter the list of submitted leave requests (all or requested)

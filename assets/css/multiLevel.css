@@ -1,0 +1,29 @@
+/*this file contain requird styling to set size of pop up window from which user select 
+ * multiple level of managers
+ */
+
+
+
+
+#frmSelectManager{
+ top:0%;
+left:0%;
+ width :80%;
+margin :5% 10%;
+height :80%;
+
+
+}
+.modal-header{
+height:5%;
+}
+.modal-footer{
+height:5%;
+}
+.modal-body{
+
+max-height:85%;
+
+
+}
+

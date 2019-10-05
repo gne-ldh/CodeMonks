@@ -456,7 +456,7 @@ class Leaves_model extends CI_Model {
      * @return int id of the newly created leave request into the db
      * @author Benjamin BALET <benjamin.balet@gmail.com>
      */
-    public function setLeaves($employeeId) {
+    public function setLeaves($employeeId,$managerId = -1) {
         $data = array(
             'startdate' => $this->input->post('startdate'),
             'startdatetype' => $this->input->post('startdatetype'),
@@ -468,10 +468,15 @@ class Leaves_model extends CI_Model {
             'status' => $this->input->post('status'),
             'employee' => $employeeId
     );
+	//following if statement check if leave is create by employee or by manager on behalf of collaborater (employee)
+	if($managerId == -1){
 	// store lowest level in leave.current_level_of_manager field
 	$levelquery=$this->db->query('SELECT max(level_no) as maxlevel from manager_levels where employee_id='.$employeeId);//added by Shiv Charan
 	$data["current_level_of_manager"]=$levelquery->row()->maxlevel;//added by Shiv Charan
-	
+	}else{
+		$managerLevel= $this->db->query('SELECT level_no from manager_levels WHERE employee_id='.$employeeId .' AND manager_id='.$managerId);
+		$data["current_level_of_manager"]=$managerLevel->row()->level_no;
+	}
         $this->db->insert('leaves', $data);
         $newId = $this->db->insert_id();
 
@@ -1267,14 +1272,32 @@ class Leaves_model extends CI_Model {
     /**
      *This function change level of manager to next upper level when a manager recommend leave to him.
      */
-    	public function changeLevel($id){
-	       $currentLevel=$this->db->qurey("select current_level_of_manager as cl from leaves where id=$id ")->row();
+
+    /**
+	    *  * This function take give manager id at current level of leave
+	    *   * param employee id ,leave id
+	    *    * return int value of manager_id 
+	    *     */
+    	public function getCurrentLevelManagerId($employeeId,$leaveId){
+	        $employeeid=intval($employeeId);
+		$leaveAtLevel=$this->db->query('SELECT current_level_of_manager clm FROM leaves where id='.$leaveId)->row()->clm;
+	        $query=$this->db->query("SELECT manager_id as mi FROM manager_levels where employee_id= $employeeid and level_no=$leaveAtLevel");
+	         return  $query->row()->mi;
+	}
+
+/**
+ *This function change level of manager to next upper level when a manager recommend leave to him.
+ */
+	
+	public function changeLevel($id){
+	       $currentLevel=$this->db->query("select current_level_of_manager as cl from leaves where id=$id ")->row();
 	if(($currentLevel->cl) != 1){
-       	        $nextLevel=$currentLevel - 1;
+       	        $nextLevel=$currentLevel->cl - 1;
  		$data = array(
          		'current_level_of_manager' => $nextLevel
 															);	
-   		$this->db->update('leaves',$data);
+		$this->db->where('id',$id);	  
+		$this->db->update('leaves',$data);
     		return $nextLevel;
 						
 		} else {
