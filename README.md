@@ -33,6 +33,7 @@ Use bbalet / bbalet for login / password.
 * Available in English, French, Spanish, Italian, Portuguese, German, Dutch, Russian, Ukrainian, Persian, Khmer, Vietnamese, Czech, Arabic and Turkish.
 
 ## Installation
+**IMPORTANT** If you are using jorani from this repostory then after cloning Please change root directory name from CodeMonks to jorani to avoid any unexpected error.
 
 **IMPORTANT:** If you want to install Jorani in production, please download it from the Release tab.
 
