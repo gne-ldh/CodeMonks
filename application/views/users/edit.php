@@ -371,7 +371,7 @@ if($users_item['id'] == $manager['manager_id']){
         //Popup select position
         $("#cmdSelectManager").click(function() {
             $("#frmSelectManager").modal('show');
-            $("#frmSelectManagerBody").load('<?php echo base_url(); ?>users/employees');
+            $("#frmSelectManagerBody").load('<?php echo base_url(); ?>users/MultiLevelManager');
         });
 
         //Popup select position

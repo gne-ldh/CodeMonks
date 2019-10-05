@@ -566,7 +566,7 @@ echo form_open('users/create', $attributes); ?>
         //Popup select manager
         $("#cmdSelectManager").click(function() {
             $("#frmSelectManager").modal('show');
-            $("#frmSelectManagerBody").load('<?php echo base_url(); ?>users/employees');
+            $("#frmSelectManagerBody").load('<?php echo base_url(); ?>users/MultiLevelManager');
         });
 
         //Popup select position
