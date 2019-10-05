@@ -9,26 +9,6 @@
 ?>
 
 
-<style>
-#frmSelectManager{
- top:0%;
- left:0%;
-  width :80%;
-  margin :5% 10%;
-  height :80%;
-  }
-  .modal-header{
-  height:5%;
-  }
-  .modal-footer{
-  height:5%;
-  }
-  .modal-body{
-  max-height:85%;
-  }
-  </style>
-  
-
 <div class="row-fluid">
     <div class="span12">
 <h2><?php echo lang('users_create_title');?><?php echo $help;?></h2>
@@ -304,11 +284,11 @@ echo form_open('users/create', $attributes); ?>
         <img src="<?php echo base_url();?>assets/images/loading.gif">
     </div>
     <div class="modal-footer">
-<!---->
+<!--
     <a href="#"  class="btn btn-primary"><?php echo "Add manager";?></a>
         <a href="#"  class="btn btn-primary"><?php echo "Remove manager";?></a>
-<!---->   
-	<a href="#" onclick="select_manager();" class="btn"><?php echo lang('users_create_popup_manager_button_ok');?></a>
+-->   
+	<a href="#" onclick="select_manager();" class="btn btn-primary"><?php echo "Submit:";?></a>
 	<!--        <a href="#" onclick="$('#frmSelectManager').modal('hide');" class="btn"><?php echo lang('users_create_popup_manager_button_cancel');?></a>
 -->
     </div>
@@ -341,6 +321,7 @@ echo form_open('users/create', $attributes); ?>
         <a href="#" onclick="$('#frmSelectPosition').modal('hide');" class="btn"><?php echo lang('users_create_popup_position_button_cancel');?></a>
     </div>
 </div>
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/multiLevel.css">
 
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jsencrypt.min.js"></script>
 <link rel="stylesheet" href="<?php echo base_url();?>assets/bootstrap-datepicker-1.8.0/css/bootstrap-datepicker.min.css">
@@ -360,8 +341,8 @@ echo form_open('users/create', $attributes); ?>
 	    var manager=new Array();
 	    var val =employees.rows().data().toArray();
 	    $.each(val,function(index,val){
-	    $('#managerS').append($('<option>',{value:val['id'],selected:"selected",text:val['firstname']}));
-	     manager.push( val['id']);
+		    $('#managerS').append($('<option>',{value:val['id'],selected:"selected",disabled:"disabled",text:val['firstname']}));
+		    manager.push( val['id']);
 	     });
 	     //console.log(manager);
 	     //shiv
@@ -370,16 +351,7 @@ echo form_open('users/create', $attributes); ?>
 	                   //          $('#manager').val(manager[]);
 
 //	    $('#txtManager').val(text);
-	    var options=$('#managerS option');
-	    //    options.select().all();
-	         var manval=$.map(options,function(option){
-	         	return option.value ;
-	         		});
-	         		 var sel =$("#managerS option:selected").val();
-	         		  alert(sel);
-	         		  	alert(manval +"shiv");
-  //      }
-        $("#frmSelectManager").modal('hide');
+       $("#frmSelectManager").modal('hide');
     }
 
     //Popup select entity: on click OK, find the entity id for the selected node
@@ -411,7 +383,7 @@ echo form_open('users/create', $attributes); ?>
         if ($('#lastname').val() == "") fieldname = "lastname";
         if ($('#login').val() == "") fieldname = "login";
         if ($('#email').val() == "") fieldname = "email";
-        if ($('#txtManager').val() == "") fieldname = "manager";
+        if ($('#managerS').val() == "") fieldname = "manager";
         if ($('#contract').val() == "") fieldname = "contract";
         if ($('#password').val() == "") fieldname = "password";
         if (fieldname == "") {
@@ -560,7 +532,11 @@ echo form_open('users/create', $attributes); ?>
             checkLogin();
         });
 
-        $('#send').click(function() {
+	$('#send').click(function() {
+		$('#send').click(function() {
+		//enable all option of select
+		$("#managerS option").attr('disabled', false);
+					
             if (validate_form() == false) {
                 //Error of validation
             } else {
@@ -614,11 +590,15 @@ echo form_open('users/create', $attributes); ?>
 
         //Self manager button
         $("#cmdSelfManager").click(function() {
-            $("#manager").val('-1');
-            $('#txtManager').val('<?php echo lang('users_create_field_manager_alt');?>');
-        });
+     //  $("#managerS").val('-1');
+        $('#managerS').find('option').remove();
+	$('#managerS').append($('<option>',{value:'-1',selected:"selected",disabled:"disabled",text:"<?php echo lang('users_create_field_manager_alt');?>"}));
+   
+        // $('#managerS').test('<?php echo lang('users_create_field_manager_alt');?>');
+	});
 
-        //Init all tooltips
+     
+     //Init all tooltips
         $('[data-toggle="tooltip"]').tooltip({ placement: 'top'});
     });
 

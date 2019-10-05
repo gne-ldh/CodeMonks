@@ -37,7 +37,22 @@ class Users_model extends CI_Model {
         $query = $this->db->get_where('users', array('users.id' => $id));
         return $query->row_array();
     }
-
+/**shiv
+	*      *Get manager of employee with their level
+	*           * @param int $id id of employee
+	*                * return array of manager id with their level
+	*                     */
+        public function getManagers($id){
+		         	    $this->db->select('manager_levels.manager_id');
+		                    $this->db->order_by("level_no", "asc");
+			    	    $this->db->where('employee_id',$id);
+			    	    $query=$this->db->get('manager_levels');
+				    	   
+				    $emid=intval($id);
+				    $query=$this->db->query("SELECT manager_id FROM `manager_levels` WHERE employee_id=$emid ORDER by level_no ASC");
+				     return $query->result_array();
+				     	       
+				     }
     /**
      * Get the list of users and their roles
      * @return array record of users
@@ -212,7 +227,6 @@ class Users_model extends CI_Model {
         );
         
    //shiv
-		$level=1;
 		//	$this->db->select('MAX(id) as max_id');
 		//	$this->db->from('users');
 		//      $maxid=$this->db->get()->result_array();
@@ -232,11 +246,14 @@ class Users_model extends CI_Model {
             $data['ldap_path'] = $this->input->post('ldap_path');
         }
         $this->db->insert('users', $data);
-        
-      //Deal with insertion of manager levels in manager_levels table
+        $newuserid = $this->db->insert_id();
+
+	//Deal with insertion of manager levels in manager_levels table
+	$level=1;
 	foreach($this->input->post("managerS") as $managers){
-         $query = $this->db->query('SELECT max(id) as maxid from users') ; 
-         $newuserid=$query->row()->maxid;
+	if($managers == -1){
+		$managers = $newuserid; //Deal with user having no line manager
+	}		
 	$man=array(
         'employee_id'=>$newuserid,
 	'manager_id'=>$managers,
@@ -372,7 +389,7 @@ class Users_model extends CI_Model {
             'login' => $this->input->post('login'),
             'email' => $this->input->post('email'),
             'role' => $role,
-            'manager' => $manager,
+        //    'manager' => $manager,
             'contract' => $this->input->post('contract'),
             'identifier' => $this->input->post('identifier'),
             'language' => $this->input->post('language'),
@@ -389,6 +406,25 @@ class Users_model extends CI_Model {
         }
         if ($this->config->item('ldap_basedn_db') !== FALSE) {
             $data['ldap_path'] = $this->input->post('ldap_path');
+        }
+	//shiv
+	//delete previous level of manager of employee
+	$employeeId=$this->input->post('id');
+	$query="DELETE FROM `manager_levels` where employee_id=$employeeId";
+	$this->db->query($query);
+	//add updated levels
+	$level=1;
+	foreach($this->input->post("managerS") as $managers){
+		if($managers == -1){
+			$managers = $employeeId; //Deal with user having no line manager
+		}
+        $man=array(
+        'employee_id'=>$employeeId,
+        'manager_id'=>$managers,
+        'level_no'=>$level
+        );
+        $this->db->insert('manager_levels',$man);
+        $level = $level + 1;
         }
 
         $this->db->where('id', $this->input->post('id'));

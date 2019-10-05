@@ -24,30 +24,14 @@
     <tbody id="employeeTbody">
 
 
-<!--
-<?php foreach ($employees as $employee): ?>
-    <tr>
-        <td><?php echo $employee['id'] ?></td>
-        <td><?php echo $employee['firstname'] ?></td>
-        <td><?php echo $employee['lastname'] ?></td>
-        <td><?php echo $employee['email'] ?></td>
-    </tr>
-<?php endforeach ?>
--->
-    </tbody>
+   </tbody>
 </table>
 </div>
-<div class="col-12 text-center">
-
-	<!-- need to provide lang-->
-	<button id="removeLevel"  class="btn btn-primary centre" onclick="removeLevel();"><?php echo "Remove Level"; ?></button>
-    </div>
-    <hr style="border-top: 1px solid #000000" />
 </div>
 <!---->
+ <hr style="border-top: 1px solid #000000" />
 
-<div class="row-fluid">
-    <div class="span4">
+<div class="span4">
         <div class="input-append">
             <input type="text" class="input-medium" placeholder="<?php echo lang('organization_index_field_search_placeholder');?>" id="txtSearch" />
             <button id="cmdClearSearch" class="btn btn-primary"><i class="mdi mdi-close"></i></button>
@@ -56,7 +40,7 @@
         <div style="text-align: left;" id="organization"></div>
     </div>
     <div class="span8">
-        <h3><?php echo lang('organization_index_title_employees');?></h3>
+        <h4><?php echo lang('organization_index_title_employees');?></h4>
         <table cellpadding="0" cellspacing="0" border="0" class="display" id="collaborators" width="100%">
             <thead>
 		<tr>
@@ -124,7 +108,8 @@ var eTable;
                 { data: "firstname" },
                 { data: "lastname" },
                 { data: "email" }
-            ],
+	],
+	ordering:false,
         searching :false, //to save space
        // select: 'single',
         pageLength: 5,

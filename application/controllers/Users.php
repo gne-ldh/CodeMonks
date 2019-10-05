@@ -84,8 +84,11 @@ class Users extends CI_Controller {
         $this->auth->checkIfOperationIsAllowed('employees_list');
         $data = getUserContext($this);
         $this->lang->load('datatable', $this->language);
-        $data['employees'] = $this->users_model->getAllEmployees();
-        $data['title'] = lang('employees_index_title');
+	$this->lang->load('organization', $this->language);
+        $this->lang->load('treeview', $this->language);
+	       
+	$data['employees'] = $this->users_model->getAllEmployees();
+	$data['title'] = lang('employees_index_title');
 	// $this->load->view('users/employees', $data);
 	 $this->load->view('multi_level/selectlevel');
     }
@@ -155,7 +158,7 @@ class Users extends CI_Controller {
         $this->form_validation->set_rules('login', lang('users_edit_field_login'), 'required|strip_tags');
         $this->form_validation->set_rules('email', lang('users_edit_field_email'), 'required|strip_tags');
         $this->form_validation->set_rules('role[]', lang('users_edit_field_role'), 'required');
-        $this->form_validation->set_rules('manager', lang('users_edit_field_manager'), 'required|strip_tags');
+        $this->form_validation->set_rules('managerS[]', lang('users_edit_field_manager'), 'required|strip_tags');
         $this->form_validation->set_rules('contract', lang('users_edit_field_contract'), 'strip_tags');
         $this->form_validation->set_rules('entity', lang('users_edit_field_entity'), 'strip_tags');
         $this->form_validation->set_rules('position', lang('users_edit_field_position'), 'strip_tags');
@@ -175,10 +178,15 @@ class Users extends CI_Controller {
             $this->load->model('positions_model');
             $this->load->model('organization_model');
             $this->load->model('contracts_model');
-            $data['contracts'] = $this->contracts_model->getContracts();
-            $data['manager_label'] = $this->users_model->getName($data['users_item']['manager']);
-            $data['position_label'] = $this->positions_model->getName($data['users_item']['position']);
-            $data['organization_label'] = $this->organization_model->getName($data['users_item']['organization']);
+	      $data['managers']=$this->users_model->getManagers($data['users_item']['id']);
+	    	    $data['contracts'] = $this->contracts_model->getContracts();
+	    	    $counter=0;
+	    foreach($data['managers'] as $key => $manager){
+	              $data['managers'][$key]['name'] = $this->users_model->getName($manager['manager_id']);
+	             $counter++;
+		   }
+ 	    $data['position_label'] = $this->positions_model->getName($data['users_item']['position']);
+	    $data['organization_label'] = $this->organization_model->getName($data['users_item']['organization']);
             $data['roles'] = $this->roles_model->getRoles();
             $this->load->view('templates/header', $data);
             $this->load->view('menu/index', $data);
