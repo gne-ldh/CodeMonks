@@ -22,7 +22,7 @@
         <h3>{Title}</h3>
         Dear {Firstname} {Lastname}, <br />
         <br />
-        <p>Your cancellation request was accepted and the leave request has been cancelled.</p>
+        <p>Your cancellation request was accepted and the leave request has been cancelled by {managerName}.</p>
         <table border="0">
             <tr>
                 <td>From &nbsp;</td><td>{StartDate}&nbsp;({StartDateType})</td>

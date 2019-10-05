@@ -43,9 +43,13 @@
             <tr>
               <td>Last Comment &nbsp;</td><td>{Comments}</td>
             </tr>
-            <tr>
-                <td><a href="{BaseUrl}requests/accept/{LeaveId}">Accept</a> &nbsp;</td>
-                <td><a href="{BaseUrl}requests?rejected={LeaveId}">Reject</a></td>
+	    <tr>
+	<?php if($current_level_of_manager == 1) {?>
+		<td><a href="{BaseUrl}requests/accept/{LeaveId}">Accept</a> &nbsp;</td>
+	<?php }else{ ?>	
+	 <td><a  href="{BaseUrl}requests/recommend/{LeaveId}">Recommend</a> &nbsp;</td>
+	<?php } ?>
+	<td><a href="{BaseUrl}requests?rejected={LeaveId}">Reject</a></td>
             </tr>
         </table>
         <br />
