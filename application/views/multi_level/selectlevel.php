@@ -392,8 +392,6 @@ var eTable;
     function checkid(){
 	     for(var j=0;j< oTable.rows().data().length;j++){
 	    var oTableRow=oTable.row(j);
-	console.log(oTableRow.data()['id']);
-	console.log(eTable.rows().data().length);
 	for(var i=0;i< eTable.rows().data().length;i++){
 		if(eTable.row(i).data()['id'] == oTableRow.data()['id']){
 		console.log(oTableRow.data()['id']);
