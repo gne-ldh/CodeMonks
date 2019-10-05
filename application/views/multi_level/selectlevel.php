@@ -192,7 +192,10 @@ var eTable;
         });
         $(document).keyup(function(e) {
             if (e.keyCode == 27) { $("#organization").jstree("clear_search"); }   // escape key
-        });
+	});
+	$('#collaborators').on('init.dt',function(e,settings,json){
+			    console.log('sdvs');
+			        });
 
         //Transform the HTML table in a fancy datatable
         oTable = $('#collaborators').DataTable({
@@ -331,7 +334,8 @@ var eTable;
                 var isTableLoaded = false;
                 oTable.ajax.url("<?php echo base_url(); ?>organization/employees?id=" + data.selected.join(':'))
                     .load(function() {
-                            isTableLoaded = true;
+			    isTableLoaded = true;
+			    checkid(); //this function remove record already added in eTable that show manager level.
                         }, true);
                 $.ajax({
                     type: "GET",
@@ -352,7 +356,8 @@ var eTable;
             }
         });
    });
-    
+
+    //Added by Shiv Charan
     
     $('#employees tbody').on('click', 'td.removeLevel', function () {
         var tr = $(this).closest('tr');
@@ -366,6 +371,7 @@ var eTable;
     } );
     
     
+    //Added by Shiv Charan
     
     $('#collaborators tbody').on('click', 'td.addLevel', function () {
         var tr = $(this).closest('tr');
@@ -378,6 +384,26 @@ var eTable;
         } );
 
     } );
-
+//added by Shiv charan
+    /* This function deal with removing record of employee from oTable (having id collaborators)
+	    * that are already added in eTable (having id employee and show level of managers)
+	    * it prevent duplicate entry in eTable.
+	    * */
+    function checkid(){
+	     for(var j=0;j< oTable.rows().data().length;j++){
+	    var oTableRow=oTable.row(j);
+	console.log(oTableRow.data()['id']);
+	console.log(eTable.rows().data().length);
+	for(var i=0;i< eTable.rows().data().length;i++){
+		if(eTable.row(i).data()['id'] == oTableRow.data()['id']){
+		console.log(oTableRow.data()['id']);
+			oTableRow.remove();
+			j--;	//As we remove row so datatable will decrease index of other row by one to hendel it we need to decrease our counter.	
+			break;
+		}
+	}
+	}
+	oTable.draw(false);
+	   } 
 
 </script>
