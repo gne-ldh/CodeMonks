@@ -12,8 +12,8 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
-CREATE DATABASE IF NOT EXISTS joranihack CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE joranihack;
+CREATE DATABASE IF NOT EXISTS jorani CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE jorani;
 
 --
 -- Functions
@@ -348,7 +348,7 @@ INSERT INTO `status` (`id`, `name`) VALUES
 (3, 'Accepted'),
 (4, 'Rejected'),
 (5, 'Cancellation'),
-(6, 'Canceled');
+(6, 'Canceled'),
 (7, 'Recommended');
 
 
