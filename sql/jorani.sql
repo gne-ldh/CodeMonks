@@ -12,8 +12,8 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
-CREATE DATABASE IF NOT EXISTS joranigit CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE joranigit;
+CREATE DATABASE IF NOT EXISTS joranihack CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE joranihack;
 
 --
 -- Functions
@@ -258,6 +258,7 @@ CREATE TABLE IF NOT EXISTS `leaves` (
   `duration` decimal(10,3) DEFAULT NULL COMMENT 'Length of the leave request',
   `type` int(11) DEFAULT NULL COMMENT 'Identifier of the type of the leave request (Paid, Sick, etc.). See type table.',
   `comments` TEXT NULL DEFAULT NULL COMMENT 'Comments on leave request (JSon)',
+  `current_level_of_manager` int(11) NOT NULL COMMENT 'This column give current level of manager of which it need approval',
   `document` BLOB NULL COMMENT 'Optional supporting document',
   PRIMARY KEY (`id`),
   KEY `status` (`status`),
@@ -348,6 +349,8 @@ INSERT INTO `status` (`id`, `name`) VALUES
 (4, 'Rejected'),
 (5, 'Cancellation'),
 (6, 'Canceled');
+(7, 'Recommended');
+
 
 --
 -- Structure of table `types`
@@ -369,7 +372,8 @@ INSERT INTO `types` (`id`, `name`) VALUES
 (2, 'maternity leave'),
 (3, 'paternity leave'),
 (4, 'special leave'),
-(5, 'Sick leave');
+(5, 'Sick leave'),
+(6, 'Short Leave');
 
 --
 -- Structure of table `users`
@@ -460,6 +464,7 @@ CREATE TABLE IF NOT EXISTS `leaves_history` (
   `duration` decimal(10,2) DEFAULT NULL,
   `type` int(11) DEFAULT NULL,
   `comments` TEXT NULL DEFAULT NULL COMMENT 'Comments on leave request',
+  `current_level_of_manager` int(11) NOT NULL COMMENT 'This column give current level of manager of which it need approval',
   `document` BLOB NULL COMMENT 'Optional supporting document',
   `change_id` int(11) NOT NULL AUTO_INCREMENT,
   `change_type` int(11) NOT NULL,
