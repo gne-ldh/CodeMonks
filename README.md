@@ -9,6 +9,8 @@ Jorani is designed to provide simple leave and overtime request workflows for sm
 * User group : https://groups.google.com/forum/?hl=en#!forum/jorani
 
 ## Status
+For demo of CodeMonks's work use Demo: https://shivcharanmt.gdy.club/jorani/session/login 
+Use bbalet / bbalet for login / password.
 
 This project is stable and ready for production. An online demo is available here : https://demo.jorani.org/
 Use bbalet / bbalet for login / password.
