@@ -27,7 +27,9 @@
 > python manage.py runserver
 >```
 > 3. Create Admin account (user name and password) using command:
-> python manage.py createsuperuser
-> and provide user name and password.
+> ```python
+>python manage.py createsuperuser
+>``` 
+>and provide user name and password.
 
-> 3.Now you can host the app on  server for production .
+>    Now you can host the app on  server for production .
