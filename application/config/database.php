@@ -74,11 +74,11 @@ $active_group = 'default';
 $query_builder = TRUE;
 
 $db['default'] = array(
-	'dsn'	=> 'mysql:host=localhost;dbname=shivcharanmt_joranigit',
+	'dsn'	=> 'mysql:host=localhost;dbname=joranihack',
 	'hostname' => '',
-	'username' => 'shivcharanmt',
-	'password' => 'shIv72_mT34#',
-	'database' => 'shivcharanmt_joranigit',
+	'username' => '',
+	'password' => '',
+	'database' => 'joranihack',
 	'dbdriver' => 'pdo',
 	'dbprefix' => '',
 	'pconnect' => FALSE,

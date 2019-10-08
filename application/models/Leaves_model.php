@@ -1302,7 +1302,8 @@ class Leaves_model extends CI_Model {
 						
 		} else {
 	return -1;														}
-	}
+		}
+
 
     /**
      * Count leave requests submitted to the connected user (or if delegate of a manager)

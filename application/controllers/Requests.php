@@ -112,7 +112,8 @@ class Requests extends CI_Controller {
 	$currentLevelManagerId=$this->leaves_model->getCurrentLevelManagerId($employee['id'],$id);
 	$is_delegate = $this->delegations_model->isDelegateOfManager($this->user_id,$currentLevelManagerId);
 	//   $data['data']=$topLevelManager[0]['mi'];
-       //   $this->load->view('test',$data);
+	//   $this->load->view('test',$data);
+	file_put_contents("/var/www/html/hack/filediff",print_r($currentLevelManagerId,true));
 	    if (($this->user_id ==$currentLevelManagerId) || ($this->is_hr)  || ($is_delegate)) {
 	$nextlevel= $this->leaves_model->changeLevel($id); 
 	$this->leaves_model->switchStatus($id, LMS_RECOMMENDED);       
@@ -132,7 +133,7 @@ class Requests extends CI_Controller {
         } else {
             log_message('error', 'User #' . $this->user_id . ' illegally tried to accept leave #' . $id);
             $this->session->set_flashdata('msg', lang('requests_accept_flash_msg_error'));
-            redirect('leaves');
+        redirect('leaves');
         }
 }
     //shiv

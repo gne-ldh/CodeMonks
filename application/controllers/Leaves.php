@@ -44,7 +44,8 @@ class Leaves extends CI_Controller {
           $data['leaves'] = $this->leaves_model->getLeavesOfEmployeeWithHistory($this->session->userdata('id'));
         } else {
           $data['leaves'] = $this->leaves_model->getLeavesOfEmployee($this->session->userdata('id'));
-        }
+	}
+	file_put_contents("php://stderr",print_r($data['leaves'],true));
         $data['types'] = $this->types_model->getTypes();
         $data['title'] = lang('leaves_index_title');
         $data['help'] = $this->help->create_help_link('global_link_doc_page_leave_requests_list');

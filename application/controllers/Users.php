@@ -107,7 +107,7 @@ class Users extends CI_Controller {
 	$data['employees'] = $this->users_model->getAllEmployees();
         $data['title'] = lang('employees_index_title');
 //	$this->load->view('multi_level/level', $data);
-        $this->load->view('multi_level/seletlevel');
+        $this->load->view('multi_level/selectlevel');
     }
 
     /**

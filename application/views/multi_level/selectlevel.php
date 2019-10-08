@@ -54,8 +54,6 @@
             <tbody>
             </tbody>
         </table>
-	<br />
- <button id="addLevel"  class="btn btn-primary " onclick="addLevel();"><?php echo "Add Level"; ?></button>
 
 
      </div>

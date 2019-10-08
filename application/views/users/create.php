@@ -288,7 +288,7 @@ echo form_open('users/create', $attributes); ?>
     <a href="#"  class="btn btn-primary"><?php echo "Add manager";?></a>
         <a href="#"  class="btn btn-primary"><?php echo "Remove manager";?></a>
 -->   
-	<a href="#" onclick="select_manager();" class="btn btn-primary"><?php echo "Submit:";?></a>
+	<a href="#" onclick="select_manager();" class="btn btn-primary"><?php echo "Submit";?></a>
 	<!--        <a href="#" onclick="$('#frmSelectManager').modal('hide');" class="btn"><?php echo lang('users_create_popup_manager_button_cancel');?></a>
 -->
     </div>
@@ -335,7 +335,8 @@ echo form_open('users/create', $attributes); ?>
 <script type="text/javascript">
 
     //Popup select postion: on click OK, find the user id for the selected line
-    function select_manager() {
+	function select_manager() {
+	     var employees = $('#employees').DataTable();
 //	    if ( employees.rows({ selected: true }).any() ) { alert("got");	
 	    //shiv
 	    var manager=new Array();
@@ -533,7 +534,6 @@ echo form_open('users/create', $attributes); ?>
         });
 
 	$('#send').click(function() {
-		$('#send').click(function() {
 		//enable all option of select
 		$("#managerS option").attr('disabled', false);
 					
@@ -565,7 +565,8 @@ echo form_open('users/create', $attributes); ?>
 
         //Popup select manager
         $("#cmdSelectManager").click(function() {
-            $("#frmSelectManager").modal('show');
+		$("#frmSelectManager").modal('show');
+		console.log('sgfvds');
             $("#frmSelectManagerBody").load('<?php echo base_url(); ?>users/MultiLevelManager');
         });
 
