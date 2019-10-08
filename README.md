@@ -34,6 +34,7 @@ Use bbalet / bbalet for login / password.
 
 ## Installation
 **IMPORTANT** If you are using jorani from this repostory then after cloning Please change root directory name from CodeMonks to jorani to avoid any unexpected error.
+Also Do not forget to update vendor folder with composer (described below) as you must clone it to use.
 
 **IMPORTANT:** If you want to install Jorani in production, please download it from the Release tab.
 
