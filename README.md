@@ -18,8 +18,10 @@ Use bbalet / bbalet for login / password.
 ## Features
 
 * Comprehensive online documentation (French and English).
-* Notifications by e-mail (requested, accepted, rejected and new user).
-* Leave request approval workflow (1 validator).
+* Notifications by e-mail (requested, accepted,recommended, rejected and new user).
+* **Multi Level Leave request approval workflow (more then one validator).**
+* **Short Leave Feature of 2 hours.**
+* **Easy manager searching to create manager level using tree of organisation.**
 * Overtime request approval workflow (1 validator).
 * Leave balance report (filtered by department).
 * Monthly presence report.
