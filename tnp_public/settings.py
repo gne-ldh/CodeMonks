@@ -85,15 +85,8 @@ WSGI_APPLICATION = 'tnp_public.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'tnp',
-        'USER': 'mysqluser',
-        'PASSWORD': 'password',
-        'HOST': 'localhost',
-        'PORT': '',
-        'OPTIONS': {
-                   'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
-        }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
@@ -144,6 +137,7 @@ LOGIN_REDIRECT_URL = '/home'
 
 # Progressive Web App Manifest
 PWA_APP_NAME ='Training And Placement Cell'
+PWA_SHORT_NAME = 'TnP'
 PWA_APP_DESCRIPTION = "Student's Eligibility Details"
 PWA_APP_THEME_COLOR = '#1952ab'
 PWA_APP_BACKGROUND_COLOR = '#ffffff'
