@@ -62,7 +62,7 @@ def get_conditions(form):
         query += 'aggregate_sgpa>=\'{}\' AND '.format(cond['min_sgpa'])
     
     if 'max_backlogs' in cond:
-        query += 'aggregate_sgpa<= \'{}\' AND '.format(cond['max_backlogs'])
+        query += 'aggregate_active_backlogs<= \'{}\' AND '.format(cond['max_backlogs'])
 
     if not cond['gender_select'] == 'both':
         query += 'gender=\'{}\' AND '.format(cond['gender_select'])
