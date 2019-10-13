@@ -39,4 +39,10 @@ After fetching data searching can be performed based on the selected attributes.
 >```python
 > python manage.py runserver
 >```
-> 3. If it works well, host the app using a dedicated server.
+> 3. Create Admin account (user name and password) using command:
+> ```python
+>python manage.py createsuperuser
+>``` 
+>and provide user name and password.
+
+>    Now you can host the app on  server for production .
