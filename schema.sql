@@ -237,7 +237,7 @@ CREATE TABLE `student_info` (
   `batch` int(4) NOT NULL,
 
   `advisor_id` varchar(25) NOT NULL,
-  `full_name` varchar(50) GENERATED ALWAYS AS (CONCAT('sfname', ' ', 'smname', ' ', 'ssname'))
+  `full_name` varchar(50) GENERATED ALWAYS AS (CONCAT(sfname, ' ', smname, ' ', ssname))
 
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -249,7 +249,7 @@ CREATE TABLE `student_info` (
 
 INSERT INTO `student_info` (`student_info_id`,  `course_code`,  `branch_code`, `shift`, `semester`, `admission_year`, `sc_st_category`, `gill_quota`, `hostel_facility`, `college_roll_no`, `university_roll_no`, `ssection`, `sgroup`, `leet_non_leet`, `fws`, `sfname`, `smname`, `ssname`, `ffname`, `fmname`, `fsname`, `mfname`, `mmname`, `msname`, `date_of_birth`, `gender`, `blood_group`, `martial_status`, `nationality`, `c_address_type`, `c_address_line_1`, `c_address_line_2`, `c_city_name`, `c_vpo`, `c_pincode`, `c_tehsil`, `c_district`, `c_state`, `p_address_type`, `p_address_line_1`, `p_address_line_2`, `p_city_name`, `p_vpo`, `p_pincode`, `p_tehsil`, `p_district`, `p_state`, `father_mobile_no`, `mother_mobile_no`, `residence_phone_no`, `residence_phone_no_std`, `parents_annual_income`, `student_mobile_no`, `father_email`, `mother_email`, `student_email`, `father_qualification`, `father_occupation`, `father_office_address`, `father_office_phone`, `father_office_phone_std`, `mother_qualification`, `mother_occupation`, `mother_office_address`, `mother_office_phone`, `mother_office_phone_std`, `student_status`, `religion`, `student_category`, `aicte_rc`, `full_part_time`, remarks,`fee_paid_status`, `eligibility`,  `batch`, `advisor_id`) VALUES
 
-(11767,  1,  15, 'Second', 5, 2019, '', '', 'Day Scholar',  '1715397', '1736295', 'E', 'E3', 'N', 'N', 'Gursajan ', 'Singh', 'Aulakh', 'Varinderjeet', 'Singh', 'Aulakh', 'Harpreet ', 'Kaur', 'Aulakh', '1998-12-17', 'Male', 'O+', 'Married', NULL, 'Village', '528/2', 'PAKHOWAL ROAD', '', 'SUNET', '141012', 'LUDHIANA', 'LUDHIANA', 'PUNJAB', 'Village', '528/2', 'PAKHOWAL ROAD', '', 'SUNET', '141012', 'LUDHIANA', 'LUDHIANA', 'PUNJAB', 9988900361, '9914755535', '', '', '500000', '9780100414', '', '', 'gursajanaulakh@gmail.com', 'B.A. II', 'Aggriculture', '', '', '', '', 'House wife', '', '', '',  'Onroll', 'Sikh', 'General',  'AICTE', 'Full Time','','Y', 'Y', 2017,  'goldendeepkaur')
+(11767,  1,  15, 'Second', 5, 2019, '', '', 'Day Scholar',  '1715397', '1736295', 'E', 'E3', 'N', 'N', 'Gursajan ', 'Singh', 'Aulakh', 'Varinderjeet', 'Singh', 'Aulakh', 'Harpreet ', 'Kaur', 'Aulakh', '1998-12-17', 'Male', 'O+', 'Married', NULL, 'Village', '528/2', 'PAKHOWAL ROAD', '', 'SUNET', '141012', 'LUDHIANA', 'LUDHIANA', 'PUNJAB', 'Village', '528/2', 'PAKHOWAL ROAD', '', 'SUNET', '141012', 'LUDHIANA', 'LUDHIANA', 'PUNJAB', 9988900361, '9914755535', '', '', '500000', '9780100414', '', '', 'gursajanaulakh@gmail.com', 'B.A. II', 'Aggriculture', '', '', '', '', 'House wife', '', '', '',  'Onroll', 'Sikh', 'General',  'AICTE', 'Full Time','','Y', 'Y', 2017,  'goldendeepkaur');
 
 --
 
@@ -332,3 +332,11 @@ ALTER TABLE `student_info`
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+CREATE TABLE `sgpa_info` (`university_roll_no` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, `sem_1` double precision NULL, `credits_1` double precision NULL, `active_backlogs_1` double precision NULL, `passive_backlogs_1` double precision NULL, `sem_2` double precision NULL, `credits_2` double precision NULL, `active_backlogs_2` double precision NULL, `passive_backlogs_2` double precision NULL, `sem_3` double precision NULL, `credits_3` double precision NULL, `active_backlogs_3` double precision NULL, `passive_backlogs_3` double precision NULL, `sem_4` double precision NULL, `credits_4` double precision NULL, `active_backlogs_4` double precision NULL, `passive_backlogs_4` double precision NULL, `sem_5` double precision NULL, `credits_5` double precision NULL, `active_backlogs_5` double precision NULL, `passive_backlogs_5` double precision NULL, `sem_6` double precision NULL, `credits_6` double precision NULL, `active_backlogs_6` double precision NULL, `passive_backlogs_6` double precision NULL, `sem_7` double precision NULL, `credits_7` double precision NULL, `active_backlogs_7` double precision NULL, `passive_backlogs_7` double precision NULL, `sem_8` double precision NULL, `credits_8` double precision NULL, `active_backlogs_8` double precision NULL, `passive_backlogs_8` double precision NULL);
+
+ALTER TABLE `sgpa_info` ADD COLUMN aggregate_sgpa DOUBLE GENERATED ALWAYS as ((sem_1 + sem_2 + sem_3 + sem_4 + sem_5 + sem_6 + sem_7 + sem_8)/8);
+
+ALTER TABLE `sgpa_info` ADD COLUMN aggregate_active_backlogs DOUBLE GENERATED ALWAYS as ((active_backlogs_1 + active_backlogs_2 + active_backlogs_3 + active_backlogs_4 + active_backlogs_5 + active_backlogs_6 + active_backlogs_7 + active_backlogs_8)/8);
+
+insert into sgpa_info(university_roll_no, sem_1,sem_2,sem_3,sem_4,sem_5,sem_6,sem_7,sem_8) values(1736295,8,28,2,2,2,2,2,2);

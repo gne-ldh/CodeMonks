@@ -159,12 +159,7 @@ class SgpaInfo(models.Model):
     credits_8           = models.FloatField(blank=True, null=True, default=None)
     active_backlogs_8   = models.FloatField(blank=True, null=True, default=None)
     passive_backlogs_8  = models.FloatField(blank=True, null=True, default=None)
-    
-    @property
-    def aggregate_sgpa(self):
-        return (self.sem_1+self.sem_2+self.sem_3+self.sem_4+self.sem_5+self.sem_6+self.sem_7+self.sem_8)/8
-    @property
-    def aggregate_active_backlogs(self):
-        return (self.active_backlogs_8+self.active_backlogs_7+self.active_backlogs_6+self.active_backlogs_5+self.active_backlogs_4+self.active_backlogs_3+self.active_backlogs_2+self.active_backlogs_1)/8
+
     class Meta:
+        managed  = False
         db_table = 'sgpa_info'
