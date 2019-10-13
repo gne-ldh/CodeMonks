@@ -236,7 +236,8 @@ CREATE TABLE `student_info` (
 
   `batch` int(4) NOT NULL,
 
-  `advisor_id` varchar(25) NOT NULL
+  `advisor_id` varchar(25) NOT NULL,
+  `full_name` varchar(50) GENERATED ALWAYS AS (CONCAT('sfname', ' ', 'smname', ' ', 'ssname'))
 
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

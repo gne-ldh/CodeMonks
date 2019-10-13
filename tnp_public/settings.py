@@ -85,9 +85,13 @@ WSGI_APPLICATION = 'tnp_public.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'shivcharanmt_tnp',
+        'HOST': '127.0.0.1',
+        'USER': 'shivcharanmt',
+        'PASSWORD': 'shIv72_mT34#',
+        'PORT': ""
+       }
 }
 
 
